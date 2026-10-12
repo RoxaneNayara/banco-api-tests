@@ -6,7 +6,10 @@ const postLogin = require('../fixtures/postLogin.json')
 describe('Login', () => {
     describe ('POST /login', () => {
         it('Deve retornar 200 com um token em string com credenciais válidas', async () => {
-            const bodyLogin = { ...postLogin }
+            const bodyLogin = {
+                username: process.env.TEST_USERNAME,
+                senha: process.env.TEST_PASSWORD
+            };
             
             const resposta = await request(process.env.BASE_URL)
                 .post('/login')
