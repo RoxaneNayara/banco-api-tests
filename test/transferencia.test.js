@@ -60,7 +60,7 @@ describe('Transferencias', () => {
         it('Deve retornar 10 elementos na paginacao quendo informar limite de 10 registros ', async () => {
             const resposta = await request(process.env.BASE_URL)
                 .get('/transferencias?page=1&limit=10')
-                .set('Authorization', `Baerer ${token}`)
+                .set('Authorization', `Bearer ${token}`)
 
             expect(resposta.status).to.equal(200)
             expect(resposta.body.limit).to.equal(10)
