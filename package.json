@@ -1,7 +1,7 @@
 {
   "name": "banco-api-tests",
   "version": "1.0.0",
-  "description": "",
+  "description": "Projeto de testes automatizados de API REST com JavaScript, Mocha, Chai e Supertest, focado em autenticação, transferências, regras de negócio e paginação.",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/**/*.test.js --timeout=200000 --reporter mochawesome"
