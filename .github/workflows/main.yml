@@ -11,10 +11,28 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
+    # Serviço MySQL
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.CI_DB_ROOT_PASSWORD }}
+          MYSQL_DATABASE: banco
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     env:
       BASE_URL: http://localhost:3000
-      TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
-      TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+      DB_HOST: 127.0.0.1
+      DB_USER: root
+      DB_PASSWORD: ${{ secrets.CI_DB_ROOT_PASSWORD }}
+      DB_NAME: banco
+      PORT: '3000'
 
     steps:
       - name: Checkout do projeto de testes
@@ -39,22 +57,18 @@ jobs:
         working-directory: banco-api
         run: npm ci
 
-      # Próximas etapas:
-      # 1. Configurar o serviço MySQL
-      # 2. Criar tabelas e massa de dados
-      # 3. Iniciar a API REST em segundo plano
-      # 4. Validar a disponibilidade da API
+      - name: Instalar cliente MySQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-mysql-client
 
-      - name: Executar testes automatizados
-        run: npm test
+      - name: Verificar conexão com MySQL
+        env:
+          MYSQL_PWD: ${{ secrets.CI_DB_ROOT_PASSWORD }}
+        run: |
+          mysql -h 127.0.0.1 -u root \
+            -e "SHOW DATABASES;"
 
-      - name: Publicar relatório Mochawesome
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: relatorio-banco-api
-          path: mochawesome-report/
-          if-no-files-found: warn
-
-
-          
+  I
+      # - Executar npm test
+      # - Publicar relatório Mochawesome
